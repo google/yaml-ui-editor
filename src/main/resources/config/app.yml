@@ -1,0 +1,54 @@
+# Copyright 2023 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Contains custom application-specific properties.
+#
+# Standard Spring Boot application properties should go in spring.yml instead of this file.
+
+git:
+  credentials:
+    # If _both_ username and password are provided, they will be used to authenticate to the remote
+    # Git repository. Otherwise, the app uses the Git configuration on the host (e.g., stores and
+    # helpers defined in `gitconfig`).
+    #username:
+    #password:
+  local:
+    # path specifies the local filesystem path where the Git repository should be cloned. Defaults
+    # to `config-repo`. This can be either an absolute or relative path.
+    #path: config-repo
+  repository:
+    # url is the remote Git repository URL. It is _required_ and there is _no default value_.
+    # Replace the value below with the URL of the Git repository where your YAML
+    # configuration files are stored.
+    url: https://github.com/google/yaml-ui-editor
+
+    # Name of the remote repository used when cloning, pulling and pushing, defaults to `origin`.
+    #remote: origin
+
+    # branch to use for pushing and pulling, defaults to `main`.
+    #branch: main
+
+    # paths configures relative directory paths inside the Git repository where config files and
+    # JSON schemas reside. Defaults to `config` and `schemas`, respectively.
+    paths:
+      config: src/test/resources/samples/config
+      schemas: src/test/resources/samples/schemas
+  yaml:
+    # Extension to be used for the configuration data files. Defaults to `yaml`.
+    extension: yml
+
+validation:
+  # server specifies whether to enable (true) or disable (false) server-side validation of the
+  # JSON Schema.
+  server: true

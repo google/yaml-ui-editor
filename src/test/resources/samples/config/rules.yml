@@ -1,0 +1,4 @@
+rules:
+  allowedAccountTypes:
+  - "current"
+  withdrawalThreshold: 1000

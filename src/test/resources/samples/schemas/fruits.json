@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "title": "Fruits",
+  "properties": {
+    "fruits": {
+      "type": "array",
+      "format": "checkbox",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Apple",
+          "Pear",
+          "Banana",
+          "Mango",
+          "Mangosteen",
+          "Durian",
+          "Orange",
+          "Lemon",
+          "Lime",
+          "Grapefruit"
+        ]
+      }
+    }
+  }
+}

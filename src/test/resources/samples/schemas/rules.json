@@ -1,0 +1,56 @@
+{
+    "type": "object",
+    "title": "Business rule parameters",
+    "required": [
+        "rules"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "rules": {
+            "title": "Rules",
+            "type": "object",
+            "required": [
+                "allowedAccountTypes",
+                "withdrawalThreshold"
+            ],
+            "additionalProperties": true,
+            "properties": {
+                "allowedAccountTypes": {
+                    "title": "Allowed account types",
+                    "$ref": "#/$defs/accountTypes"
+                },
+                "withdrawalThreshold": {
+                    "title": "Withdrawal Threshold",
+                    "format": "choices",
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5000
+                }
+            }
+        }
+    },
+    "$defs": {
+        "accountTypes": {
+            "type": "array",
+            "format": "checkbox",
+            "uniqueItems": true,
+            "items": {
+                "type": "string",
+                "enum": [
+                    "current",
+                    "joint",
+                    "savings",
+                    "term_deposit"
+                ],
+                "options": {
+                    "enum_titles": [
+                        "Current",
+                        "Joint",
+                        "Savings",
+                        "Term Deposit"
+                    ]
+                }
+            }
+        }
+    }
+}

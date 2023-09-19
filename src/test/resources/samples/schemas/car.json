@@ -1,0 +1,42 @@
+{
+    "type": "object",
+    "title": "Car",
+    "properties": {
+        "make": {
+            "type": "string",
+            "enum": [
+                "Toyota",
+                "BMW",
+                "Honda",
+                "Ford",
+                "Mazda",
+                "VW"
+            ]
+        },
+        "model": {
+            "type": "string"
+        },
+        "year": {
+            "type": "integer",
+            "enum": [
+                2012,
+                2013,
+                2014,
+                2015,
+                2016,
+                2017,
+                2018,
+                2019,
+                2020,
+                2021,
+                2022,
+                2023
+            ]
+        },
+        "safety": {
+            "type": "integer",
+            "format": "rating",
+            "maximum": 5
+        }
+    }
+}

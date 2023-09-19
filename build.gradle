@@ -1,0 +1,225 @@
+// Copyright 2023 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+buildscript {
+	repositories {
+		maven {
+			url 'https://maven-central.storage-download.googleapis.com/maven2/'
+		}
+		gradlePluginPortal()
+		mavenCentral()
+	}
+}
+
+plugins {
+	id 'application'
+	id 'checkstyle'
+	id 'com.github.ben-manes.versions' version '0.48.0'
+	id 'com.github.sherter.google-java-format' version '0.9'
+	id 'com.github.spotbugs' version '5.0.14'
+	id 'com.google.cloud.tools.jib' version '3.3.2'
+	id 'com.gorylenko.gradle-git-properties' version '2.4.1'
+	id 'io.spring.dependency-management' version '1.1.3'
+	id 'jacoco'
+	id 'java'
+	id 'maven-publish'
+	id 'org.springframework.boot' version '3.1.3'
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+	withSourcesJar()
+}
+
+repositories {
+	maven {
+		url 'https://maven-central.storage-download.googleapis.com/maven2/'
+	}
+	mavenCentral()
+}
+
+// Use SLF4J and logback
+configurations {
+	all*.exclude group: 'commons-logging'
+	all*.exclude group: 'log4j'
+	all*.exclude group: 'org.apache.logging.log4j'
+	all*.exclude module: 'slf4j-log4j12'
+	all*.exclude module: 'slf4j-simple'
+}
+
+ext {
+	set('springCloudVersion', '2022.0.4')
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+dependencies {
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.2'
+	implementation 'com.networknt:json-schema-validator:1.0.87'
+	implementation 'commons-io:commons-io:2.13.0'
+	implementation 'io.github.gitflow-incremental-builder:gitflow-incremental-builder:4.5.1'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+	implementation 'javax.annotation:javax.annotation-api:1.3.2'
+	implementation 'org.eclipse.jgit:org.eclipse.jgit:6.7.0.202309050840-r'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.cloud:spring-cloud-starter:4.0.4'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	compileOnly "com.github.spotbugs:spotbugs-annotations:${spotbugs.toolVersion.get()}"
+	spotbugsSlf4j 'org.slf4j:slf4j-nop' // prevent classpath warnings when running SpotBugs tasks
+}
+
+tasks.withType(JavaCompile) {
+	group = 'Build'
+	options.encoding = 'UTF-8'
+}
+tasks.withType(ProcessResources) {
+	group = 'Build'
+}
+
+// https://github.com/ben-manes/gradle-versions-plugin
+tasks.named("dependencyUpdates").configure {
+	checkBuildEnvironmentConstraints = true
+	checkConstraints = true
+	gradleReleaseChannel = 'current'
+}
+
+// https://github.com/n0mer/gradle-git-properties#usage
+gitProperties {
+	extProperty = 'gitProps' // git properties available using project.ext.gitProps
+}
+generateGitProperties.outputs.upToDateWhen { false } // always execute the generateGitProperties task
+
+
+group = 'com.google.example.yamlui'
+application {
+	mainClass = "${group}.YamlUiEditor"
+}
+
+springBoot {
+	buildInfo {
+		properties {
+			time = null // for reproducible builds
+		}
+	}
+}
+
+bootJar {
+	manifest {
+		attributes (
+				'Main-Class': "${application.mainClass.get()}",
+				'Name': "${project.name}",
+				'Build-Jdk-Spec': java.toolchain.getLanguageVersion(),
+				'Build-Revision': "${-> project.ext.gitProps['git.commit.id']}",
+				'Build-Source': "${-> project.ext.gitProps['git.remote.origin.url']}",
+				'Specification-Title': 'YAML UI Git Editor',
+				'Specification-Vendor': 'Google LLC',
+				'Implementation-Title': "${project.group}",
+				'Implementation-Vendor': 'Google LLC',
+				'Implementation-Version': "${-> project.ext.gitProps['git.closest.tag.name']}",
+		)
+	}
+	preserveFileTimestamps false // for reproducible builds
+	reproducibleFileOrder true // for reproducible builds
+}
+
+jar {
+	manifest = bootJar.manifest
+	preserveFileTimestamps = bootJar.isPreserveFileTimestamps()
+	reproducibleFileOrder = bootJar.isReproducibleFileOrder()
+}
+
+jib {
+	container {
+		format = 'OCI' // default is 'Docker'
+		// https://github.com/opencontainers/image-spec/blob/main/annotations.md#pre-defined-annotation-keys
+		labels = [
+				'org.opencontainers.image.base.name': "${jib.from.image}",
+				'org.opencontainers.image.description': 'YAML UI editing application with Git repository storage.',
+				'org.opencontainers.image.licenses': 'Apache-2.0',
+				'org.opencontainers.image.revision': "${-> project.ext.gitProps['git.commit.id']}",
+				'org.opencontainers.image.source': "${-> project.ext.gitProps['git.remote.origin.url']}",
+				'org.opencontainers.image.title': 'YAML UI Git demo',
+				'org.opencontainers.image.url': "${-> project.ext.gitProps['git.remote.origin.url']}",
+				'org.opencontainers.image.vendor': 'Google LLC',
+				'org.opencontainers.image.version': "${-> project.ext.gitProps['git.closest.tag.name']}",
+		]
+	}
+}
+
+tasks.bootStartScripts.group = 'Distribution'
+tasks.startScripts.group = 'Distribution'
+
+test {
+	reports {
+		html.required = false
+		junitXml.required = false
+	}
+	useJUnitPlatform()
+	testLogging {
+		events 'passed', 'skipped', 'failed'
+		exceptionFormat = 'full'
+	}
+}
+
+jacocoTestReport {
+	reports {
+		csv.required = false
+		xml.required = false
+	}
+}
+check.dependsOn jacocoTestReport
+
+spotbugs {
+	effort = 'max'
+	ignoreFailures = false
+	reportLevel = 'high'
+}
+
+tasks.withType(Checkstyle) {
+	config = resources.text.fromArchiveEntry(
+			configurations.named('checkstyle').get().resolve().find {it.name.contains('checkstyle')},
+			'google_checks.xml') // 'google_checks.xml' or 'sun_checks.xml'
+	dependsOn tasks.verifyGoogleJavaFormat
+	group = 'Verification'
+	ignoreFailures = true
+	reports {
+		html.required = false
+		xml.required = false
+	}
+}
+
+// https://github.com/sherter/google-java-format-gradle-plugin
+tasks.googleJavaFormat {
+	description = 'Formats source code according to the Google Java Style Guide.'
+	group = 'Formatting'
+}
+googleJavaFormat {
+	toolVersion = '1.17.0'
+	options style: 'GOOGLE' // 'GOOGLE' (default, 2 space indent) or 'AOSP' (4 space indent)
+}
+tasks.verifyGoogleJavaFormat {
+	dependsOn tasks.googleJavaFormat
+	description = 'Verifies that source code is formatted according to the Google Java Style Guide.'
+	group = 'Formatting'
+}

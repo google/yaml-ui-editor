@@ -1,0 +1,58 @@
+# Copyright 2023 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Contains standard Spring Boot application properties.
+#
+# Reference: https://docs.spring.io/spring-boot/docs/2.7.6/reference/htmlsingle/#appendix.application-properties
+#
+# Custom application-specific properties should go in app.yml instead of this file.
+
+logging:
+  level:
+    com.networknt.schema.JsonMetaSchema: ERROR
+    org.eclipse.jgit.internal.transport.http.NetscapeCookieFile: ERROR
+    org.springframework.security.core.userdetails.User: ERROR
+    web: INFO # Set to DEBUG to log requests and how they map to controller methods.
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    jmx:
+      exposure:
+        include: '*'
+    web:
+      exposure:
+        include: '*'
+  server:
+    port: ${actuator-port:8081}
+
+server:
+  port: ${port:8080}
+
+spring:
+  devtools:
+    add-properties: true
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+  profiles:
+    active: default
