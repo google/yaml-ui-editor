@@ -87,4 +87,27 @@ async function init() {
   });
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+  // Utilise le chemin relatif vers l'endpoint
+  fetch('/schemas')
+    .then(response => response.json())
+    .then(data => {
+      const listContainer = document.getElementById('dynamic-list');
+
+      // Génère les éléments de la liste à partir des données JSON
+      data.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item';
+
+        const a = document.createElement('a');
+        a.href = `?type=${item}`;
+        a.textContent = item.charAt(0).toUpperCase() + item.slice(1); // Capitalise la première lettre
+        
+        li.appendChild(a);
+        listContainer.appendChild(li);
+      });
+    })
+    .catch(error => console.error('Erreur lors de la récupération des données:', error));
+});
+
 window.onload = init;
