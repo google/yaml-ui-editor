@@ -15,11 +15,19 @@
 package com.google.example.yamlui.config;
 
 import com.google.example.yamlui.git.GitClient;
+import com.google.example.yamlui.schema.SchemaException;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ConcurrentModificationException;
+import java.util.EmptyStackException;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,5 +129,42 @@ class ConfigRepository {
       return "user@example.com";
     }
     return user.getUsername() + "@example.com";
+  }
+
+    /**
+     * Removes everything before the last specified delimiter in the path.
+     *
+     * @param path The input path string.
+     * @param delimiter The delimiter used to determine where to cut the string.
+     * @return The substring after the last delimiter.
+     */
+    private static String removeFullPath(String path, String delimiter) {
+      return path.substring(path.lastIndexOf(delimiter) + delimiter.length() + 1).replace("\\","/");
+  }
+
+  /** Returns all available config relative path, sorted alphabetically. */
+  public List<String> getConfigs() {
+   Path fullPath = gitClient.getLocalPath().resolve(configPath);
+    System.out.println(fullPath);
+    try (Stream<Path> stream = Files.walk(fullPath)) {
+      List<String> paths = stream
+          .filter(Files::isRegularFile) // Filtrer uniquement les fichiers réguliers
+          .map(Path::toString)
+          .filter(fileName -> fileName.endsWith("." + yamlExtension))
+          .map(FilenameUtils::removeExtension)
+          .sorted()
+          .collect(Collectors.toList());
+
+      for (int i = 0; i < paths.size(); i++) {
+        paths.set(i, removeFullPath(paths.get(i),configPath.toString()));
+      }
+
+      System.out.println(paths);
+
+      return paths;
+      
+    } catch (IOException e) {
+      throw new ConfigException("Can list configs file from '"+fullPath+"'. ",e);
+    }
   }
 }
