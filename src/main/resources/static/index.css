@@ -40,7 +40,7 @@
   justify-content: flex-end; 
   padding: 5px;
   margin-top: -50px;
-  margin-right: -50px;
+  margin-right: 10px;
 }
 
 .button-container .btn {
@@ -50,4 +50,47 @@
   border-radius: 20px;
   width: 40px;
   height: 40px;
+}
+
+html, body{
+  top: 0;
+  left: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#sidenav{
+  background-color: rgba(185, 185, 185, 0.2);
+  margin-left: 0px;
+  height: 100%;
+  width: 0;
+  top: 0;
+  left: 0;
+  position: fixed;
+  z-index: 1;
+  overflow-x: hidden;
+  transition: 0s;
+  padding-top: 0px;
+}
+
+#opennav{
+  top: 0;
+  left: 0;
+  position: fixed;
+  z-index: 1;
+  overflow-x: hidden;
+}
+
+h1{
+  margin: 10px 0 0 30px;
+}
+
+#editor_form{
+  margin: 0 10px 0 10px;
+}
+
+button{
+  border-radius: 10px;
+  border-color: lightgrey;
 }

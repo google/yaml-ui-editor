@@ -148,12 +148,12 @@ class ConfigRepository {
     System.out.println(fullPath);
     try (Stream<Path> stream = Files.walk(fullPath)) {
       List<String> paths = stream
-          .filter(Files::isRegularFile) // Filtrer uniquement les fichiers réguliers
-          .map(Path::toString)
-          .filter(fileName -> fileName.endsWith("." + yamlExtension))
-          .map(FilenameUtils::removeExtension)
-          .sorted()
-          .collect(Collectors.toList());
+        .filter(Files::isRegularFile) // Filtrer uniquement les fichiers réguliers
+        .map(Path::toString)
+        .filter(fileName -> fileName.endsWith("." + yamlExtension))
+        .map(FilenameUtils::removeExtension)
+        .sorted()
+        .collect(Collectors.toList());
 
       for (int i = 0; i < paths.size(); i++) {
         paths.set(i, removeFullPath(paths.get(i),configPath.toString()));
