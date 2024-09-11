@@ -29,7 +29,7 @@
 
 <body>
 
-  <a id="opennav" onclick="openNav()">
+  <a id="opennav" href="javascript:void(0)" onclick="openNav()">
     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M500-640v320l160-160-160-160ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm120-80v-560H200v560h120Zm80 0h360v-560H400v560Zm-80 0H200h120Z"/></svg>
   </a>
 
@@ -45,6 +45,7 @@
     <h1>Configuration Editor</h1>
 
     <div class="button-container">
+      
       <a class="btn btn-primary" href="sync">
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" style="margin-left: -2px" viewBox="100 -920 960 960" width="24px" fill="#5f6368"><path d="M160-160v-80h110l-16-14q-52-46-73-105t-21-119q0-111 66.5-197.5T400-790v84q-72 26-116 88.5T240-478q0 45 17 87.5t53 78.5l10 10v-98h80v240H160Zm400-10v-84q72-26 116-88.5T720-482q0-45-17-87.5T650-648l-10-10v98h-80v-240h240v80H690l16 14q49 49 71.5 106.5T800-482q0 111-66.5 197.5T560-170Z"/></svg>
       </a>
@@ -57,13 +58,15 @@
 
     <p id="result_message"></p>
 
-
-    <div id="editor_form_loading" class="loading"></div>
-
     <form id="editor_form" style="display: none;">
+      <div id="save">
+        <button id="submit" type="button">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/></svg>
+        </button>
+        <div id="editor_form_loading" class="loading"></div>
+        <div id="submit_loading" class="loading" style="display: none;"></div>
+      </div>
       <div id="editor_holder"></div>
-      <button id="submit" type="button">Save</button>
-      <div id="submit_loading" class="loading" style="display: none;"></div>
     </form>
     <p></p>
   </div>
