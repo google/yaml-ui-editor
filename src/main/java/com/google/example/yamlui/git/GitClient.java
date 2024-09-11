@@ -171,7 +171,9 @@ public class GitClient {
 
   /** Equivalent to <code>git add</code>. */
   public void add(String filepattern) {
+    filepattern = filepattern.replace("\\","/");  // Correction for window path
     try (Git git = new Git(repo)) {
+      LOG.info("Adding to commit: "+filepattern);
       git.add().addFilepattern(filepattern).call();
     } catch (GitAPIException e) {
       throw new GitException("Could not add files for pattern " + filepattern, e);
