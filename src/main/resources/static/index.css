@@ -21,6 +21,21 @@ h1{
   color: gray;
 }
 
+ul{
+  padding-inline-start: 10px;
+  list-style-type: none;
+}
+
+li{
+  border-style: outset;
+  border-width: 2px 0 0 2px;
+  border-color: white;
+}
+
+#dynamic-list{
+ padding: 5px;
+}
+
 #result_message {
     margin-top: 1em;
 }
@@ -60,7 +75,7 @@ h1{
 }
 
 #sidenav{
-  background-color: rgba(185, 185, 185, 0.2);
+  background-color: rgb(219, 219, 219);
   margin-left: 0px;
   min-height: 100%;
   width: 0;
