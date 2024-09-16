@@ -18,6 +18,7 @@ import com.google.example.yamlui.git.GitException;
 import com.google.example.yamlui.yamljson.YamlJsonMapper;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -64,6 +65,13 @@ class ConfigController {
     this.configValidator = configValidator;
     this.yamlJsonMapper = yamlJsonMapper;
     this.validate = validate;
+  }
+
+
+  @GetMapping(value = "/configs", produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseBody
+  List<String> listConfigs() {
+    return configRepository.getConfigs();
   }
 
   /**

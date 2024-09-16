@@ -14,14 +14,41 @@
  * limitations under the License.
  */
 
+h1{
+  font-family: "Protest Guerrilla", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  color: gray;
+}
+
+ul{
+  padding-inline-start: 10px;
+  list-style-type: none;
+}
+
+li{
+  border-style: solid;
+  border-width: 0;
+  border-color: black;
+  margin-bottom: 10px;
+}
+
+li a{
+  padding-left: 20px;
+}
+
+#dynamic-list{
+ padding: 5px;
+}
+
 #result_message {
     margin-top: 1em;
 }
 
 .loading {
   display: inline-block;
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
   border: 3px solid rgba(0,0,0,.3);
   border-radius: 50%;
   border-top-color: #000;
@@ -40,7 +67,7 @@
   justify-content: flex-end; 
   padding: 5px;
   margin-top: -50px;
-  margin-right: -50px;
+  margin-right: 10px;
 }
 
 .button-container .btn {
@@ -50,4 +77,56 @@
   border-radius: 20px;
   width: 40px;
   height: 40px;
+}
+
+#sidenav{
+  background-color: rgb(219, 219, 219);
+  margin-left: 0px;
+  min-height: 100%;
+  width: 0;
+  top: 0;
+  left: 0;
+  position: fixed;
+  z-index: 1;
+  overflow-x: hidden;
+  transition: 0s;
+  padding-top: 0px;
+  overflow-y: auto;
+  scrollbar-color: rgb(169, 169, 169) rgb(0, 0, 0, 0.0);
+  scrollbar-width: thin;
+  max-height: 100vh;
+}
+
+#opennav{
+  top: 0;
+  left: 0;
+  position: fixed;
+  z-index: 1;
+  overflow-x: hidden;
+}
+
+h1{
+  margin: 10px 0 0 30px;
+}
+
+#result_message, #editor_form_loading, #editor_form{
+  margin: 0 10px 0 10px;
+}
+
+#save{
+  position: absolute;
+  right: 10px;
+  margin-top: 10px;
+  z-index: 1;
+}
+
+#save button{
+  border-width: 0;
+  background-color: white;
+}
+
+.collapse-button{
+  border-width: 0;
+  background: rgba(0,0,0,0);
+  font-weight: bolder;
 }

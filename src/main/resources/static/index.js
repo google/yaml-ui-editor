@@ -87,27 +87,61 @@ async function init() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-  // Use the relative path to the endpoint
-  fetch('/schemas')
+
+document.addEventListener("DOMContentLoaded", function() { 
+  fetch('/configs')
     .then(response => response.json())
     .then(data => {
       const listContainer = document.getElementById('dynamic-list');
 
-      // Generate the list items from the JSON data.
-      data.forEach(item => {
-        const li = document.createElement('li');
-        li.className = 'list-group-item';
 
-        const a = document.createElement('a');
-        a.href = `?type=${item}`;
-        a.textContent = item.charAt(0).toUpperCase() + item.slice(1); // Capitalize the first letter.
-        
-        li.appendChild(a);
-        listContainer.appendChild(li);
+      data.forEach(item => {
+        const parts = item.split("/");
+        let root = listContainer;
+
+        parts.forEach((part, index) => {
+
+          let existingElement = Array.from(root.children).find(child => child.textContent == part);
+
+          if (!existingElement) {
+            const li = document.createElement('li');
+
+            if (index === parts.length - 1) {
+              // File
+              const a = document.createElement('a');
+              a.href = "?type="+encodeURIComponent(item);
+              a.textContent = part;
+              li.appendChild(a);
+              root.appendChild(li);
+            } else {
+              // Folder
+              var collapse = document.createElement('button');
+              collapse.textContent = '+';
+              collapse.classList.add("collapse-button");
+              li.appendChild(collapse);
+
+              // Create the text node and append it to <li>
+              const textNode = document.createTextNode(part);
+              li.appendChild(textNode);
+
+              let ul = Array.from(li.children).find(child => child.tagName === 'UL');
+              if (!ul) {
+                ul = document.createElement('ul');
+                li.appendChild(ul);
+              }
+              root.appendChild(li);
+              root = ul;
+            }
+          } else {
+            // Si l'élément existe déjà, on passe au niveau suivant
+            let ul = Array.from(existingElement.children).find(child => child.tagName === 'UL');
+            root = ul || existingElement;
+          }
+        });
       });
     })
     .catch(error => console.error('Error retrieving data:', error));
 });
+
 
 window.onload = init;
