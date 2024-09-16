@@ -87,11 +87,13 @@ async function init() {
   });
 }
 
+
 document.addEventListener("DOMContentLoaded", function() { 
   fetch('/configs')
     .then(response => response.json())
     .then(data => {
       const listContainer = document.getElementById('dynamic-list');
+
 
       data.forEach(item => {
         const parts = item.split("/");
