@@ -27,9 +27,14 @@ ul{
 }
 
 li{
-  border-style: outset;
-  border-width: 2px 0 0 2px;
-  border-color: white;
+  border-style: solid;
+  border-width: 0;
+  border-color: black;
+  margin-bottom: 10px;
+}
+
+li a{
+  padding-left: 20px;
 }
 
 #dynamic-list{
@@ -86,6 +91,10 @@ li{
   overflow-x: hidden;
   transition: 0s;
   padding-top: 0px;
+  overflow-y: auto;
+  scrollbar-color: rgb(169, 169, 169) rgb(0, 0, 0, 0.0);
+  scrollbar-width: thin;
+  max-height: 100vh;
 }
 
 #opennav{
@@ -114,4 +123,10 @@ h1{
 #save button{
   border-width: 0;
   background-color: white;
+}
+
+.collapse-button{
+  border-width: 0;
+  background: rgba(0,0,0,0);
+  font-weight: bolder;
 }

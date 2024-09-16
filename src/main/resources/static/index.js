@@ -98,7 +98,8 @@ document.addEventListener("DOMContentLoaded", function() {
         let root = listContainer;
 
         parts.forEach((part, index) => {
-          let existingElement = Array.from(root.children).find(child => child.textContent === part);
+
+          let existingElement = Array.from(root.children).find(child => child.textContent == part);
 
           if (!existingElement) {
             const li = document.createElement('li');
@@ -112,7 +113,15 @@ document.addEventListener("DOMContentLoaded", function() {
               root.appendChild(li);
             } else {
               // Folder
-              li.textContent = part;
+              var collapse = document.createElement('button');
+              collapse.textContent = '+';
+              collapse.classList.add("collapse-button");
+              li.appendChild(collapse);
+
+              // Create the text node and append it to <li>
+              const textNode = document.createTextNode(part);
+              li.appendChild(textNode);
+
               let ul = Array.from(li.children).find(child => child.tagName === 'UL');
               if (!ul) {
                 ul = document.createElement('ul');
